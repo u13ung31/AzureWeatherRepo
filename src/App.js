@@ -4,6 +4,8 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Login from './Frontend/login.component'
 import SignUp from './Frontend/signup.component'
+import SearchBox from './Frontend/SearchBox.component'
+
 function App() {
   return (
     <Router>
@@ -24,6 +26,9 @@ function App() {
                   <Link className="nav-link" to={'/sign-up'}>
                     Sign up
                   </Link>
+                </li>
+                <li className="nav-item">
+                  <SearchBox />
                 </li>
               </ul>
             </div>
