@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import {Login as LoginUser} from '../Backend/Login';
 
 const Login = () => {
 
@@ -42,11 +43,12 @@ const Login = () => {
         // No errors! Put any logic here for the form submission!
 
         let jsonBody = {
-            "Email": form.email,
+            "UserName": form.email,
             "Password": form.password
         }
 
         console.log(jsonBody);
+        //LoginUser(jsonBody);
         // method i Backend
     }
   }
@@ -57,7 +59,7 @@ const Login = () => {
         <div className="mb-3">
           <label>Email address</label>
           <input
-            type="email"
+            type="text"
             className="form-control"
             placeholder="Enter email"
             onChange={e => setField('email', e.target.value)}
