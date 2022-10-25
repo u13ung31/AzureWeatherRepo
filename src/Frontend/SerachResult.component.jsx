@@ -1,7 +1,24 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react';
 import { useLocation } from 'react-router-dom'
+import { SearchResultJS } from '../Backend/SearchResultQueryFinder';
 
 const SearchResult = () =>{
+    const[DataisLoaded,SetDataLoaded] = useState(false);
+    const[items,SetItems] = useState([]);
+
+    useEffect(() => {
+        let isMounted = true;               // note mutable flag
+
+        /*SearchResultJS(from).then(json =>{
+                if (isMounted){
+                    console.log(json);
+                    SetItems(json)
+                    SetDataLoaded(true)
+
+                }
+            })*/
+        return () => { isMounted = false };
+    });
 
     let checkIfSearchWork = true;
     var from = ""; 
@@ -13,9 +30,8 @@ const SearchResult = () =>{
 
     }
     else{
-        console.log(location.state.from.length);
 
-        from = location.state
+        from = location.state.from
 
     }
 
@@ -24,22 +40,64 @@ const SearchResult = () =>{
     if (matches != null) {
         checkIfSearchWork = false;
     }
-
+    
     if(checkIfSearchWork){
         return (
             <form>
                 <div>
-                <h1>{from}</h1>
+                {from}
                 </div>
             </form>)
-    }
-    else{
+        /*
+        const names = []
+        const studentDetails = ['Alex', 'Anik', 'Deven', 'Rathore'];
+        let countdown = 0  
+        SearchResultJS(from).then(json =>{
+            json.forEach((data) => {
+                names.push(<h3 key={countdown}>{data.name}</h3>)
+                countdown++;
+            })
+            return (
+                <div className='container'>
+                  {names}
+                </div>
+              )
+        })
+      
+        
+        /*SearchResultJS(from).then(data =>{
+            data.forEach((data) => {
+                names.push(<h3>{data.name}</h3>)
+            })
+        })
+       
         return (
             <form>
                 <div>
-                    <h1>No search result found</h1>
+                {names}
                 </div>
-            </form>)
+            </form>)*/
+           
+            
+    }
+    if (DataisLoaded){
+
+        items.forEach(data =>{
+
+        });
+
+        return ( <form>
+            <div>
+                <h1>No search result found</h1>
+            </div>
+        </form>) ;
+    }
+    else{
+        return ( <form>
+            <div>
+                <h1>No search result found</h1>
+            </div>
+        </form>) ;
     }
 
 }

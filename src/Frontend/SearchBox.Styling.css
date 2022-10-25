@@ -4,7 +4,7 @@
   border: none;
 }
 .topnav{
-  margin-left: 75px;
+  text-align: -webkit-right;
 }
 .topnav .search-container button {
   float: right;

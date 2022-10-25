@@ -6,11 +6,12 @@ import Login from './Frontend/login.component'
 import SignUp from './Frontend/signup.component'
 import SearchBox from './Frontend/SearchBox.component'
 import SearchResult from './Frontend/SerachResult.component'
+import background from "./Img/BgWeather.png";
 
 
 function App() {
   return (
-    <Router>
+    <Router style={{ backgroundImage: `url(${background})` }}>
       <div className="App">
         <nav className="navbar navbar-expand-lg navbar-light fixed-top">
           <div className="container">
@@ -18,7 +19,7 @@ function App() {
               positronX
             </Link>
             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
-              <ul className="navbar-nav ml-auto">
+              <ul className="navbar-nav ulExtended ml-auto">
                 <li className="nav-item">
                   <Link className="nav-link" to={'/sign-in'}>
                     Login
