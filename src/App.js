@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Login from './Frontend/login.component'
 import SignUp from './Frontend/signup.component'
 import SearchBox from './Frontend/SearchBox.component'
+import SearchResult from './Frontend/SerachResult.component'
+
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
               <Route exact path="/" element={<Login />} />
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/Search-Result" element={<SearchResult />} />
+
             </Routes>
           </div>
         </div>
