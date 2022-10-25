@@ -1,23 +1,25 @@
 import React,{useState,useEffect} from 'react';
-import { useLocation } from 'react-router-dom'
+import { useLocation,Link } from 'react-router-dom'
+import './SearchBox.Styling.css'
 import { SearchResultJS } from '../Backend/Services/SearchResultQueryFinder';
-import ImportantString from "../Enum/ImportantStrings.json";
 const SearchResult = () =>{
     const[DataisLoaded,SetDataLoaded] = useState(false);
     const[items,SetItems] = useState([]);
 
     useEffect(() => {
         let isMounted = true;               // note mutable flag
-
-        /*SearchResultJS(from).then(json =>{
+        if(!DataisLoaded){
+            SearchResultJS(from).then(json =>{
                 if (isMounted){
                     console.log(json);
                     SetItems(json)
                     SetDataLoaded(true)
 
                 }
-            })*/
+            })
         return () => { isMounted = false };
+        }
+        
     });
     let checkIfSearchWork = true;
     var from = ""; 
@@ -40,56 +42,35 @@ const SearchResult = () =>{
         checkIfSearchWork = false;
     }
     
-    if(checkIfSearchWork){
-        return (
-            <form>
-                <div>
-                {from}
-                </div>
-            </form>)
-        /*
+    if(checkIfSearchWork && DataisLoaded){
         const names = []
-        const studentDetails = ['Alex', 'Anik', 'Deven', 'Rathore'];
-        let countdown = 0  
-        SearchResultJS(from).then(json =>{
-            json.forEach((data) => {
-                names.push(<h3 key={countdown}>{data.name}</h3>)
-                countdown++;
-            })
-            return (
-                <div className='container'>
-                  {names}
-                </div>
-              )
-        })
-      
-        
-        /*SearchResultJS(from).then(data =>{
-            data.forEach((data) => {
-                names.push(<h3>{data.name}</h3>)
-            })
-        })
-       
-        return (
-            <form>
-                <div>
-                {names}
-                </div>
-            </form>)*/
-           
-            
-    }
-    if (DataisLoaded){
-
+        let countDown = 0;
         items.forEach(data =>{
+            names.push(
+                <form className='FormSearch' key={countDown}>
+                    <div>
+                        <div>
+                            <h4>{data.name}</h4>
+                        </div>
+                        
+                        <div>
+                            <p>{data.country}</p>
+                        </div>
+                    </div>
+                    <div className='DivLink'>
+                            <button><i className="fa fa-star"></i></button>
+                    </div>
+                   
 
+                </form>
+            )
+            countDown++;
         });
 
-        return ( <form>
+        return (
             <div>
-                <h1>No search result found</h1>
-            </div>
-        </form>) ;
+            {names}
+            </div>)          
     }
     else{
         return ( <form>

@@ -1,4 +1,7 @@
 
+import ImportantString from "../../Enum/ImportantStrings.json";
+
+
 const CleanTheCityString = (stringValue) =>{
     var separateWord = stringValue.toLowerCase().split(' ');
     for (var i = 0; i < separateWord.length; i++) {
@@ -18,7 +21,7 @@ const SearchResultJS = async (QueryString) =>{
     return new Promise(function(resolve, reject) {
 
         if(queryCityName !==""){
-             fetch("https://api.openweathermap.org/geo/1.0/direct?q="+queryCityName+"&limit=5&appid=92526e142060bc0fdeddb4e5094317b5").then((res) => res.json())
+             fetch("https://api.openweathermap.org/geo/1.0/direct?q="+queryCityName+"&limit=5&appid="+ImportantString.APIKEY).then((res) => res.json())
              .then((json) => {
                  resolve(json)
              })
