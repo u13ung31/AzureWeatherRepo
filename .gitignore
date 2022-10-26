@@ -5,7 +5,7 @@
 /.pnp
 .pnp.js
 /src/Enum/*.json
-/src/Enum/ImportantStrings.cs
+/src/Enum/*.cs
 
 # testing
 /coverage
