@@ -1,16 +1,17 @@
 
 
 const Login = async (json) => {
-
-    // kalla på databas
-    const sql = require('mssql')
-    try {
-        // make sure that any items are correctly URL encoded in the connection string
-        await sql.connect('Server=localhost; Database=AzureWeatherDB;Trusted_Connection=True')
-        const result = await sql.query`select * from Users where Username = ${json.UserName}`
-        console.dir(result)
-    } catch (err) {
-        // ... error checks
+    
+    
+    const Http = new XMLHttpRequest();
+    const url='http://localhost:7071/api/HttpTriggerLogin';
+    Http.open("POST", url);
+    Http.setRequestHeader('Access-Control-Allow-Origin', '*');
+    Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    Http.send(JSON.stringify(json));    
+    Http.onreadystatechange = (e) => {
+      console.log(Http.responseText)
     }
 
 };
+export {Login};

@@ -6,6 +6,13 @@
 .topnav{
   text-align: -webkit-right;
 }
+.DivLink{
+  width: 50%;
+  text-align: end;
+}
+.FormSearch{
+  display: flex;
+}
 .topnav .search-container button {
   float: right;
   padding: 6px 10px;
