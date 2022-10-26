@@ -48,8 +48,7 @@ const Login = () => {
         }
 
         console.log(jsonBody);
-        //LoginUser(jsonBody);
-        // method i Backend
+        LoginUser(jsonBody);
     }
   }
   

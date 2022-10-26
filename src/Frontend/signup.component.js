@@ -48,9 +48,7 @@ const SignUp = () => {
         }
 
         console.log(jsonBody);
-        //SignUpUser(jsonBody);
-        // navigation
-        // method i Backend
+        SignUpUser(jsonBody);
     }
   }
     return (
