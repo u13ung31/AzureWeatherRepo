@@ -10,20 +10,14 @@ using Newtonsoft.Json;
 
 namespace Company.Function
 {
-    public static class HttpTriggerLogin
+    public static class HttpTriggerSignUp1
     {
-        [FunctionName("HttpTriggerLogin")]
+        [FunctionName("HttpTriggerSignUp")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            var body = await new StreamReader(req.Body).ReadToEndAsync();
-
-            //
-            dynamic myObject = JsonConvert.DeserializeObject<dynamic>(body);
-            string UserName = myObject.UserName;
-            log.LogInformation(UserName);
 
             string name = req.Query["name"];
 

@@ -48,7 +48,7 @@ const SignUp = () => {
         }
 
         console.log(jsonBody);
-        SignUpUser(jsonBody);
+        //SignUpUser(jsonBody);
         // navigation
         // method i Backend
     }

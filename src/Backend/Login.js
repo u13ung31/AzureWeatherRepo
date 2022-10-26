@@ -1,8 +1,6 @@
 
-
 const Login = async (json) => {
-    
-    
+     
     const Http = new XMLHttpRequest();
     const url='http://localhost:7071/api/HttpTriggerLogin';
     Http.open("POST", url);
