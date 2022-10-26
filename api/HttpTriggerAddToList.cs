@@ -7,7 +7,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-
 namespace Company.Function
 {
     public static class HttpTriggerAddToList
@@ -18,18 +17,12 @@ namespace Company.Function
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
+            //ImportantsStrings.SQLCONN;
+            var body = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic myObject = JsonConvert.DeserializeObject<dynamic>(body);
+             //{"Latitude":51.5073219,"Longitude":-0.1276474,"CityName":"England","UserId":1}
 
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult("Call sucess");
         }
     }
 }

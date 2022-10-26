@@ -2,6 +2,14 @@ import React,{useState,useEffect} from 'react';
 import { useLocation,Link } from 'react-router-dom'
 import './SearchBox.Styling.css'
 import { SearchResultJS } from '../Backend/Services/SearchResultQueryFinder';
+import { AddFavoritePlace } from '../Backend/DataServices/AddFavoritePlace';
+
+/**
+ * <button onClick={() =>
+                            {AddButton(data)}
+                            }>
+ */
+
 const SearchResult = () =>{
     const[DataisLoaded,SetDataLoaded] = useState(false);
     const[items,SetItems] = useState([]);
@@ -21,6 +29,21 @@ const SearchResult = () =>{
         }
         
     });
+    
+    const AddButton = (data) =>{
+
+        var JsonCity ={
+            Latitude: data.lat,
+            Longitude: data.lon,
+            CityName: data.state,
+            UserId: 1
+        }
+
+        AddFavoritePlace(JsonCity)
+
+
+    }
+   
     let checkIfSearchWork = true;
     var from = ""; 
     const location = useLocation()
@@ -43,10 +66,10 @@ const SearchResult = () =>{
     }
     
     if(checkIfSearchWork && DataisLoaded){
-        const names = []
+        const places = []
         let countDown = 0;
         items.forEach(data =>{
-            names.push(
+            places.push(
                 <form className='FormSearch' key={countDown}>
                     <div>
                         <div>
@@ -54,11 +77,15 @@ const SearchResult = () =>{
                         </div>
                         
                         <div>
-                            <p>{data.country}</p>
+                            <p>{data.country} - {data.state}</p>
                         </div>
                     </div>
                     <div className='DivLink'>
-                            <button><i className="fa fa-star"></i></button>
+                        <button type="button" onClick={() => {
+                        AddButton(data);
+                        }}>                        
+                            <i className="fa fa-star"></i>
+                        </button>
                     </div>
                    
 
@@ -69,7 +96,7 @@ const SearchResult = () =>{
 
         return (
             <div>
-            {names}
+            {places}
             </div>)          
     }
     else{
