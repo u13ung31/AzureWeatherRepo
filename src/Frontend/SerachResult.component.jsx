@@ -31,11 +31,10 @@ const SearchResult = () =>{
     });
     
     const AddButton = (data) =>{
-
         var JsonCity ={
             Latitude: data.lat,
             Longitude: data.lon,
-            CityName: data.state,
+            CityName: data.name,
             UserId: 1
         }
 
