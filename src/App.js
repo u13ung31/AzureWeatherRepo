@@ -7,7 +7,7 @@ import SignUp from './Frontend/signup.component'
 import SearchBox from './Frontend/SearchBox.component'
 import SearchResult from './Frontend/SerachResult.component'
 import background from "./Img/BgWeather.png";
-
+import WeatherBox from "./Frontend/WeatherBox.component"
 
 function App() {
   return (
@@ -44,6 +44,7 @@ function App() {
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/Search-Result" element={<SearchResult />} />
+              <Route path="/Home" element={<WeatherBox />} />
 
             </Routes>
           </div>

@@ -10,24 +10,27 @@ using Microsoft.Data.SqlClient;
 using System.Text;
 using Newtonsoft.Json;
 using System.Data;
+using System.Configuration;
 namespace Company.Function
 {
     public static class HttpTriggerAddToList
     {
+
+
         [FunctionName("HttpTriggerAddToList")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-            //ImportantsStrings.SQLCONN;
             var body = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic myObject = JsonConvert.DeserializeObject<dynamic>(body);
-            //{"Latitude":51.5073219,"Longitude":-0.1276474,"CityName":"England","UserId":1}
+
+            var EnvString = Environment.GetEnvironmentVariable("SqlConnectionString");
+
+
             try
             {
-
-                using (SqlConnection connection = new SqlConnection(ImportantsStrings.SQLCONN))
+                using (SqlConnection connection = new SqlConnection(EnvString))
                 {
                     String query = "INSERT INTO dbo.FavoriteWeathers (Latitude,Longitude,CityName,UserId) VALUES (@LAT,@LON,@CITY,@ID)";
 
@@ -45,8 +48,6 @@ namespace Company.Function
                         parameter2.Value = myObject.Longitude;
                         command.Parameters.Add(parameter2);
 
-                        //command.Parameters.Add("@LAT", SqlDbType.Decimal).Value = Convert.ToDecimal(51.50);
-                        //command.Parameters.Add("@LON", SqlDbType.Decimal).Value = Convert.ToDecimal(-0.12);
                         command.Parameters.Add("@CITY", SqlDbType.VarChar).Value = myObject.CityName;
                         command.Parameters.Add("@ID", SqlDbType.Int).Value = int.Parse("1");
                        
