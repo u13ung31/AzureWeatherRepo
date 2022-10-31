@@ -23,6 +23,7 @@ namespace Company.Function
             ConnectionStringSetting = "SqlConnectionString")] IEnumerable<Object> result,
             ILogger log)
         {
+            log.LogInformation("Result: Got List");
             return new OkObjectResult(result);
         }
     }

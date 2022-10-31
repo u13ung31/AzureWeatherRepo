@@ -13,7 +13,7 @@ const SearchResult = () =>{
         if(!DataisLoaded){
 
             let user = {UserID:1}
-
+            console.log("Start getting favorite");
             GetFavoritePlace(user).then(json =>{
                 if (isMounted){
                     console.log(json);

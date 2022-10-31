@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, createContext, useContext } from "react";
 import {Login as LoginUser} from '../Backend/Login';
-
+import { UserContext } from '../App';
 const Login = () => {
+  const {user,setUser } = useContext(UserContext);
 
   const [form, setForm] = useState({})
   const [errors, setErrors] = useState({})
@@ -17,7 +18,6 @@ const Login = () => {
         [field]: null
     })
   }
-
   const findFormErrors = () => {
     const { email, password } = form
     const newErrors = {}
@@ -48,7 +48,13 @@ const Login = () => {
         }
 
         console.log(jsonBody);
-        LoginUser(jsonBody);
+        LoginUser(jsonBody).then(res =>{
+          setUser({
+            UserID: res.UserId,
+          });
+        }).catch(rej =>{
+          console.log(rej);
+        });
     }
   }
   
@@ -60,7 +66,7 @@ const Login = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Enter email"
+            placeholder={'Enter Email'}
             onChange={e => setField('email', e.target.value)}
           />
         </div>

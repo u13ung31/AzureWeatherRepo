@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState, createContext, useContext } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -8,14 +9,18 @@ import SearchBox from './Frontend/SearchBox.component'
 import SearchResult from './Frontend/SerachResult.component'
 import background from "./Img/BgWeather.png";
 import WeatherBox from "./Frontend/WeatherBox.component"
+export const UserContext = React.createContext();
 
 function App() {
+  const [user, setUser] = useState("Jesse Hall");
+
   return (
+    <UserContext.Provider  value={{user,setUser}}>
     <Router style={{ backgroundImage: `url(${background})` }}>
       <div className="App">
         <nav className="navbar navbar-expand-lg navbar-light fixed-top">
           <div className="container">
-            <Link className="navbar-brand" to={'/sign-in'}>
+            <Link className="navbar-brand" to={'/'}>
               positronX
             </Link>
             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
@@ -44,13 +49,14 @@ function App() {
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/Search-Result" element={<SearchResult />} />
-              <Route path="/Home" element={<WeatherBox />} />
+              <Route path="/Home"  element={<WeatherBox />} />
 
             </Routes>
           </div>
         </div>
       </div>
     </Router>
+    </UserContext.Provider>
   )
 }
 export default App

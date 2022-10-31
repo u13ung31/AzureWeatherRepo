@@ -24,10 +24,13 @@ const SearchResultJS = async (QueryString) =>{
              fetch("https://api.openweathermap.org/geo/1.0/direct?q="+queryCityName+"&limit=5&appid="+ImportantString.APIKEY).then((res) => res.json())
              .then((json) => {
                  resolve(json)
+             }).catch(rej =>{
+                console.log(rej);
+                reject(rej);
              })
         }
         else{
-            reject()
+            reject("Empty string")
         }
     })
 }

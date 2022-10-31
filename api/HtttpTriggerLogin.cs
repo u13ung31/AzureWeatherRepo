@@ -24,7 +24,7 @@ namespace Company.Function
 
             log.LogInformation("Result: " +  result);
 
-            return new OkObjectResult(result);
+            return new OkObjectResult(result.First());
         }
     }
    

@@ -1,6 +1,6 @@
 
 const Login = async (json) => {
-
+  return new Promise(function(resolve, reject) {
     const Http = new XMLHttpRequest();
     const url='http://localhost:7071/api/HtttpTriggerLogin?UserName='+json.UserName+'&Password='+json.Password;
     console.log(url)
@@ -10,8 +10,16 @@ const Login = async (json) => {
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send(JSON.stringify(json));    
     Http.onreadystatechange = (e) => {
-      console.log(Http.responseText)
+      try {
+        //const obj = JSON.parse(Http.responseText);
+        console.log(Http.responseText);
+        resolve(Http.responseText);
+
+      } catch (error) {
+        reject(error);
+      }
+
     }
-    
-};
+  })    
+}
 export {Login};
