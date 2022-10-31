@@ -27,7 +27,7 @@ namespace Company.Function
 
             var EnvString = Environment.GetEnvironmentVariable("SqlConnectionString");
 
-
+            log.LogCritical(body);
             try
             {
                 using (SqlConnection connection = new SqlConnection(EnvString))
