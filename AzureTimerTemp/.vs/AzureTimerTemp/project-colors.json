@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "14faa755-390f-4001-891b-714408b420a4": {
+      "ProjectGuid": "14faa755-390f-4001-891b-714408b420a4",
+      "DisplayName": "AzureTimerTemp",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
