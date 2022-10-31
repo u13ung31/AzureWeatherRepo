@@ -2,7 +2,7 @@
 const SignUpUser = async (json) => {
 
     const Http = new XMLHttpRequest();
-    const url='http://localhost:7071/api/HttpTriggerSignUp';
+    const url='http://localhost:7071/api/HttpTiggerSignUp';
     Http.open("POST", url);
     Http.setRequestHeader('Access-Control-Allow-Origin', '*');
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

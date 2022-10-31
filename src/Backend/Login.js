@@ -2,7 +2,8 @@
 const Login = async (json) => {
 
     const Http = new XMLHttpRequest();
-    const url='http://localhost:7071/api/HttpTriggerLogin?Username='+json.UserName+'&Password='+json.Password;
+    const url='http://localhost:7071/api/HtttpTriggerLogin?UserName='+json.UserName+'&Password='+json.Password;
+    console.log(url)
     Http.open("GET", url);
     Http.setRequestHeader('Access-Control-Allow-Origin', '*');
     Http.setRequestHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
