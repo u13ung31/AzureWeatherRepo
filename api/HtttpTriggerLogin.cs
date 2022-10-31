@@ -11,9 +11,9 @@ namespace Company.Function
 {
     public static class HtttpTriggerLogin
     {
-    [FunctionName("HtttpTriggerLogin")]
+        [FunctionName("HtttpTriggerLogin")]
          public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             [Sql("SELECT * FROM [dbo].[Users] WHERE UserName = @UserName AND Password = @Password",
             CommandType = System.Data.CommandType.Text,
             Parameters = "@UserName={Query.UserName}, @Password={Query.Password}",
@@ -54,4 +54,12 @@ namespace Company.Function
             return new OkObjectResult(result);
         }
     }
+
+    public class Login
+    {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
+    
 }

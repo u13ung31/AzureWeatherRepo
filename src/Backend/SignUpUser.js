@@ -8,7 +8,8 @@ const SignUpUser = async (json) => {
     Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     Http.send(JSON.stringify(json));    
     Http.onreadystatechange = (e) => {
-      console.log(Http.responseText)
+      const obj = JSON.parse(Http.responseText);
+      console.log(obj)
     }
 
 };
