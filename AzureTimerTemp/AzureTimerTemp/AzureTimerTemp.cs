@@ -25,7 +25,7 @@ namespace AzureTimerTemp
     public class Function1
     { 
         [FunctionName("AzureTimerTemp")] 
-        public static async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer,
         [Queue("favoritelist", Connection = "QueueStorageConnection")] ICollector<TemperatureNow> collector,
          ILogger log)
         {
@@ -65,7 +65,7 @@ namespace AzureTimerTemp
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }
 
-        public record TemperatureNow(int Id, string CurrentWeather, decimal Temperature);
+        public record TemperatureNow(int favoriteWeatherId, string CurrentWeather, decimal Temperature);
 
         private static async Task<dynamic> FetchData(string LAT,string LON,string APIKey)
         {
