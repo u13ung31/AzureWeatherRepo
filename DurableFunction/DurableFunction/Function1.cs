@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DurableFunction
 {
@@ -18,30 +19,60 @@ namespace DurableFunction
         {
             var outputs = new List<string>();
 
-            // Replace "hello" with the name of your Durable Activity Function.
-            //await context.CallActivityAsync<string>(nameof(SayHello), "Tokyo")
-            outputs.Add(await context.CallActivityAsync<string>(nameof(SayHello), "Tokyo"));
-            outputs.Add(await context.CallActivityAsync<string>(nameof(SayBool), true));
+            outputs.Add(await context.CallActivityAsync<string>(nameof(GetDataFromDatabse), null));
+
+            outputs.Add(await context.CallActivityAsync<string>(nameof(SaveDataToDatabase), "[{FavoriteWeatherId:17, CelsiusTemp:2.22}, {FavoriteWeatherId:18, CelsiusTemp:1.24}]"));
             outputs.Add(await context.CallActivityAsync<string>(nameof(sayNumber), 0));
 
-            // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
             return outputs;
         }
 
-        [FunctionName(nameof(SayHello))]
-        public static string SayHello([ActivityTrigger] string name, ILogger log)
+        [FunctionName(nameof(GetDataFromDatabse))]
+        public static string GetDataFromDatabse([ActivityTrigger] string name, 
+        [Sql("SELECT FavoriteWeatherId, Latitude, Longitude FROM [dbo].[FavoriteWeathers]",
+            CommandType = System.Data.CommandType.Text,
+            ConnectionStringSetting = "SqlConnectionString")] IEnumerable<WeatherData> result,
+            ILogger log)
         {
-            log.LogInformation($"Saying hello to {name}.");
-            return $"Hello {name}!";
+            string weatherDataString = JsonConvert.SerializeObject(result);
+            log.LogInformation(weatherDataString);
+            return weatherDataString;
         }
+
+        public class WeatherData
+        {
+            public int FavoriteWeatherId { get; set; }
+            public decimal Latitude { get; set; }
+            public decimal Longitude { get; set; }
+        }
+
+        [FunctionName(nameof(SaveDataToDatabase))]
+        public static string SaveDataToDatabase([ActivityTrigger] string newWeatherData,
+            [Sql("[dbo].[FavoriteWeathers]", ConnectionStringSetting = "SqlConnectionString")] ICollector<NewWeatherData> collector,
+            ILogger log)
+        {
+
+            List<NewWeatherData> data = JsonConvert.DeserializeObject<List<NewWeatherData>>(newWeatherData);
+            log.LogInformation("List: " +data[0].CelsiusTemp);
+
+            foreach (NewWeatherData weatherData in data)
+            {
+                log.LogInformation("object: " + weatherData.CelsiusTemp);
+                                log.LogInformation("objectID: " + weatherData.FavoriteWeatherId);
+
+                collector.Add(weatherData);
+            }
+            return newWeatherData;
+        }
+
+        public class NewWeatherData
+        {
+            public int FavoriteWeatherId { get; set; }
+            public decimal CelsiusTemp { get; set; }
+        }
+
         [FunctionName(nameof(sayNumber))]
-        public static string sayNumber([ActivityTrigger] int number, ILogger log)
-        {
-            log.LogInformation($"Saying hello to {number}.");
-            return $"Hello {number}!";
-        }
-        [FunctionName(nameof(SayBool))]
-        public static string SayBool([ActivityTrigger] bool Bool, ILogger log)
+        public static string sayNumber([ActivityTrigger] bool Bool, ILogger log)
         {
             log.LogInformation($"Saying hello to {Bool}.");
             return $"Hello {Bool}!";
@@ -62,15 +93,13 @@ namespace DurableFunction
         [FunctionName("TimerTrigger")]
         public static async Task Run([TimerTrigger("0 */1 * * * *")] TimerInfo myTimer, TraceWriter log)
         {//this runs for every 5minutes
-            using (HttpClient client = new HttpClient())
+        using (var handler = new HttpClientHandler())
+            using (var client = new HttpClient(handler))
             {
-                var content = new FormUrlEncodedContent(new[]
-            {
-                    new KeyValuePair<string, string>("", "")
-                });
-                //making request to above function by http trigger
-                var result = await client.PostAsync("http://localhost:7131/api/Function1_HttpStart", content);
+                client.BaseAddress = new Uri("http://localhost:7071/api/");
+                var response = await client.GetAsync("Function1_HttpStart");
             }
+
             log.Info($"C# Timer trigger function executed at: {DateTime.Now}");
             log.Info(" ");
             log.Info(" ");
