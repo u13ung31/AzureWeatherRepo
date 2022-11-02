@@ -5,7 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs" Version="3.0.33" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Sql" Version="0.1.483-preview" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Sql" Version="0.1.457-preview" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.5" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
   </ItemGroup>

@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net.Http;
+using Microsoft.Azure.Functions.Worker;
 
 namespace AzureTimerTemp
 {
@@ -22,12 +23,16 @@ namespace AzureTimerTemp
     func start --port 1705
     */
     public class Function1
-    {
-        [FunctionName("AzureTimerTemp")]
-        public static async Task Run([TimerTrigger("0 */2 * * * *")]TimerInfo myTimer, ILogger log)
+    { 
+        [FunctionName("AzureTimerTemp")] 
+        public static async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer,
+        [Queue("favoritelist", Connection = "QueueStorageConnection")] ICollector<TemperatureNow> collector,
+         ILogger log)
         {
             var str = Environment.GetEnvironmentVariable("sqldb_connection");
             var API = Environment.GetEnvironmentVariable("APIKey");
+            dynamic favoriteweather = null;
+            string ID = null;
 
             string queryString = "SELECT Latitude,Longitude,FavoriteWeatherId FROM [dbo].[FavoriteWeathers];";
             using (SqlConnection connection = new SqlConnection(
@@ -43,30 +48,35 @@ namespace AzureTimerTemp
 
                         string Lat = reader[0].ToString();
                         string Lot = reader[1].ToString();
-                        string ID = reader[2].ToString();
+                        ID = reader[2].ToString();
                         //Console.WriteLine("\nLat ="+Lat +"\nLot ="+Lot +"\nID ="+ID+"\n");
-                        List<dynamic> list =await FetchData(Lat, Lot, API);
-
+                        favoriteweather = await FetchData(Lat, Lot, API);
+                        //Console.WriteLine(favoriteweather);
+                        //Console.WriteLine("\nID ="+ ID +"\nweather ="+favoriteweather.weather[0].main +"\nweather ="+favoriteweather.main.temp +"\n");
+                        
+                        TemperatureNow temperatureNow = new TemperatureNow( int.Parse(ID), favoriteweather.weather[0].main.ToString(), decimal.Parse(favoriteweather.main.temp.ToString())); 
+                        collector.Add(temperatureNow); 
+                        // 6 3
                     }
-                }
+                }               
             }
-
+            
+            
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }
 
-        private static async Task<List<dynamic>> FetchData(string LAT,string LON,string APIKey)
+        public record TemperatureNow(int Id, string CurrentWeather, decimal Temperature);
+
+        private static async Task<dynamic> FetchData(string LAT,string LON,string APIKey)
         {
             HttpClient client = new HttpClient();
             var tempValue = await client.GetAsync($"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&appid={APIKey}");
 
             var jsonString = tempValue.Content.ReadAsStringAsync().Result;
             
-
             dynamic myObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
-
-            List<dynamic> data = new List<dynamic>();
-            data.Add(myObject);
-            return data;
+            
+            return myObject;
         }
     }
 }
