@@ -1,44 +1,44 @@
 import React,{useState,useEffect} from 'react';
-import { useLocation,Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import './SearchBox.Styling.css'
 import { SearchResultJS } from '../Backend/Services/SearchResultQueryFinder';
 import { AddFavoritePlace } from '../Backend/DataServices/AddFavoritePlace';
-
-/**
- * <button onClick={() =>
-                            {AddButton(data)}
-                            }>
- */
+import { useContext } from "react";
+import { UserContext } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 const SearchResult = () =>{
+    const Loc = useLocation();
+
     const[DataisLoaded,SetDataLoaded] = useState(false);
     const[items,SetItems] = useState([]);
+    const {user} = useContext(UserContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        let isMounted = true;               // note mutable flag
-        if(!DataisLoaded){
-            SearchResultJS(from).then(json =>{
-                if (isMounted){
-                    console.log(json);
-                    SetItems(json)
-                    SetDataLoaded(true)
+        let isMounted = true;               
 
-                }
-            })
-        return () => { isMounted = false };
-        }
-        
-    });
+        SearchResultJS(Loc.state.from).then(json =>{
+            if (isMounted){
+                console.log(json);
+                SetItems(json)
+                SetDataLoaded(true)
+
+            }
+        })
+      }, [Loc]);
     
     const AddButton = (data) =>{
         var JsonCity ={
             Latitude: data.lat,
             Longitude: data.lon,
             CityName: data.name,
-            UserId: 1
+            UserId: user.UserID 
         }
 
-        AddFavoritePlace(JsonCity)
+        AddFavoritePlace(JsonCity).then(res =>{
+            navigate("/");
+        })
 
 
     }

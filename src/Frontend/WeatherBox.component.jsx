@@ -1,30 +1,42 @@
-import React,{useState,useEffect} from 'react';
-import { useLocation,Link } from 'react-router-dom'
+import React,{useState,useEffect,useRef} from 'react';
 import './SearchBox.Styling.css'
 import { GetFavoritePlace } from '../Backend/DataServices/GetFavoriteWeather';
 import { DeletePlace } from '../Backend/DataServices/DeletePlace';
+import { useContext } from "react";
+import { UserContext } from '../App';
 
 const SearchResult = () =>{
     const[DataisLoaded,SetDataLoaded] = useState(false);
     const[items,SetItems] = useState([]);
+    const {user} = useContext(UserContext);
 
-    useEffect(() => {
-        let isMounted = true;
-        if(!DataisLoaded){
-
-            let user = {UserID:1}
-            console.log("Start getting favorite");
-            GetFavoritePlace(user).then(json =>{
-                if (isMounted){
-                    console.log(json);
-                    SetDataLoaded(true);
-                    SetItems(json)
-                }
-            })
-        return () => { isMounted = false };
+useEffect(() => {
+    
+    let isMounted = true;
+    GetFavoritePlace(user).then(json =>{
+        if (isMounted){
+            console.log(json);
+            SetDataLoaded(true);
+            SetItems(json)
         }
-        
     });
+    const interval = setInterval(() => {
+    let isMounted = true;
+    SetDataLoaded(false);
+
+    if(!DataisLoaded){
+        GetFavoritePlace(user).then(json =>{
+            if (isMounted){
+                console.log(json);
+                SetDataLoaded(true);
+                SetItems(json)
+            }
+        });
+    }
+    }, 240000);
+    return () => clearInterval(interval);
+  }, []);
+
     
     const DeleteButton = (ID) =>{
 
@@ -34,30 +46,38 @@ const SearchResult = () =>{
     if(DataisLoaded){
         const places = []
         let countDown = 0;
-        items.forEach(data =>{
+        console.log(items.length)
+        if(items.length === 0){
             places.push(
-                <form className='FormSearch' key={countDown}>
-                    <div>
+            <form className='FormSearch'>
+                    <h1>You have no weathers <br/> in your List</h1>        
+            </form>)
+        }
+        else{
+            items.forEach(data =>{
+                places.push(
+                    <form className='FormSearch' key={countDown}>
                         <div>
-                            <h4>{data.CityName}</h4>
+                            <div>
+                                <h4>{data.CityName}</h4>
+                            </div>
+                            
+                            <div>
+                                <p></p>
+                            </div>
                         </div>
-                        
-                        <div>
-                            <p></p>
+                        <div className='DivLink'>
+                                <button type="button" onClick={() => {
+                                DeleteButton(data.FavoriteWeatherId);
+                                }}>                        
+                                    <i className="fa fa-trash"></i>
+                                </button>
                         </div>
-                    </div>
-                    <div className='DivLink'>
-                            <button type="button" onClick={() => {
-                            DeleteButton(data.FavoriteWeatherId);
-                            }}>                        
-                                <i className="fa fa-trash"></i>
-                            </button>
-                    </div>
-                </form>
-            )
-            countDown++;
-        });
-
+                    </form>
+                )
+                countDown++;
+            });
+        }
         return (
             <div>
             {places}
@@ -67,6 +87,7 @@ const SearchResult = () =>{
         return ( <form>
             <div>
                 <h1>Data is being fetch</h1>
+
             </div>
         </form>) ;
     }
