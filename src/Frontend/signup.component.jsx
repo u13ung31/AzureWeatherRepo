@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import SignUpUser from '../Backend/SignUpUser';
-
+import { UserContext } from '../App';
+import { useNavigate } from 'react-router-dom';
 const SignUp = () => {
-  
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({})
   const [errors, setErrors] = useState({})
   const [message, setMessage] = useState("");
+  const {setUser } = useContext(UserContext);
 
   const setField = (field, value) => {
     setForm({
@@ -48,7 +51,13 @@ const SignUp = () => {
         }
 
         console.log(jsonBody);
-        SignUpUser(jsonBody);
+        SignUpUser(jsonBody).then(res =>{
+          setUser({
+            UserID: res.userId,
+          });
+          navigate("/");
+        });
+        
     }
   }
     return (

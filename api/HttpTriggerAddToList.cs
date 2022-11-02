@@ -27,7 +27,6 @@ namespace Company.Function
 
             var EnvString = Environment.GetEnvironmentVariable("SqlConnectionString");
 
-            log.LogCritical(body);
             try
             {
                 using (SqlConnection connection = new SqlConnection(EnvString))
@@ -49,7 +48,10 @@ namespace Company.Function
                         command.Parameters.Add(parameter2);
 
                         command.Parameters.Add("@CITY", SqlDbType.VarChar).Value = myObject.CityName;
-                        command.Parameters.Add("@ID", SqlDbType.Int).Value = int.Parse("1");
+                        
+                        Console.WriteLine(myObject.UserId + " Type is = "+myObject.UserId.GetType());
+
+                        command.Parameters.Add("@ID", SqlDbType.Int).Value = myObject.UserId;
                        
 
                         connection.Open();
@@ -63,10 +65,9 @@ namespace Company.Function
             }
             catch (System.Exception e)
             {
-
                 return new OkObjectResult(e);
             }
-            return new OkObjectResult("Call sucess");
+            return new OkObjectResult("{Result:\"Call sucess\"}");
         }
     }
 }

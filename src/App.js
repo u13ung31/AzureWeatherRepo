@@ -1,8 +1,8 @@
 import React from 'react'
-import { useState, createContext, useContext } from "react";
+import { useState } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link,Navigate } from 'react-router-dom'
 import Login from './Frontend/login.component'
 import SignUp from './Frontend/signup.component'
 import SearchBox from './Frontend/SearchBox.component'
@@ -12,7 +12,7 @@ import WeatherBox from "./Frontend/WeatherBox.component"
 export const UserContext = React.createContext();
 
 function App() {
-  const [user, setUser] = useState("Jesse Hall");
+  const [user, setUser] = useState({UserID:0});
 
   return (
     <UserContext.Provider  value={{user,setUser}}>
@@ -45,12 +45,11 @@ function App() {
         <div className="auth-wrapper">
           <div className="auth-inner">
             <Routes>
-              <Route exact path="/" element={<Login />} />
+              <Route exact path="/" element={user.UserID === 0 ? <Login /> : <WeatherBox /> } />
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
-              <Route path="/Search-Result" element={<SearchResult />} />
-              <Route path="/Home"  element={<WeatherBox />} />
-
+              <Route path="/Search-Result" element={user.UserID !== 0 ? <SearchResult /> : <Navigate to='/'/>} />
+              <Route path="/Home"  element={user.UserID !== 0 ? <WeatherBox /> : <Navigate to='/'/>} />
             </Routes>
           </div>
         </div>

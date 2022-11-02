@@ -1,8 +1,12 @@
-import { useState, createContext, useContext } from "react";
-import {Login as LoginUser} from '../Backend/Login';
+import { useState, useContext } from "react";
 import { UserContext } from '../App';
+import { useNavigate } from 'react-router-dom';
+
+import {Login as LoginUser} from '../Backend/Login';
 const Login = () => {
-  const {user,setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const {setUser } = useContext(UserContext);
 
   const [form, setForm] = useState({})
   const [errors, setErrors] = useState({})
@@ -49,9 +53,12 @@ const Login = () => {
 
         console.log(jsonBody);
         LoginUser(jsonBody).then(res =>{
+          console.log(res)
           setUser({
-            UserID: res.UserId,
+            UserID: res.userId,
           });
+          navigate("/");
+
         }).catch(rej =>{
           console.log(rej);
         });

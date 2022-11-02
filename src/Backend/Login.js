@@ -11,9 +11,12 @@ const Login = async (json) => {
     Http.send(JSON.stringify(json));    
     Http.onreadystatechange = (e) => {
       try {
-        //const obj = JSON.parse(Http.responseText);
         console.log(Http.responseText);
-        resolve(Http.responseText);
+        if(Http.responseText.length > 5){
+        const obj = JSON.parse(Http.responseText);
+        resolve(obj);
+        }
+        
 
       } catch (error) {
         reject(error);

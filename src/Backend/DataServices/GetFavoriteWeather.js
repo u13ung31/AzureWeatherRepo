@@ -2,7 +2,8 @@
 const GetFavoritePlace = async (json) => {
     return new Promise(function(resolve, reject) {
       const Http = new XMLHttpRequest();
-      const url='http://localhost:7071/api/HttpTriggerGetList?UserID=1';
+      console.log(json)
+      const url='http://localhost:7071/api/HttpTriggerGetList?UserID='+json.UserID;
       console.log(url)
       Http.open("GET", url);
       Http.setRequestHeader('Access-Control-Allow-Origin', '*');
