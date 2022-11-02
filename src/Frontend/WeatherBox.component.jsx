@@ -55,6 +55,14 @@ useEffect(() => {
         }
         else{
             items.forEach(data =>{
+                let weatherData;
+                if(data.CurrentWeather === null || data.Temperature === null ||
+                    data.CelsiusTemp === null ){
+                        weatherData = <p>Data yet to be updated</p>;
+                }
+                else{
+                    weatherData =<p>{data.CurrentWeather} - {data.Temperature}K - {data.CelsiusTemp}°C</p>;
+                }
                 places.push(
                     <form className='FormSearch' key={countDown}>
                         <div>
@@ -63,7 +71,7 @@ useEffect(() => {
                             </div>
                             
                             <div>
-                                <p></p>
+                                <p>{weatherData}</p>
                             </div>
                         </div>
                         <div className='DivLink'>

@@ -1,0 +1,83 @@
+[FunctionName("MeteoSourceAPI")]
+        public static async Task<IActionResult> MeteoSourceAPI(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            var API = Environment.GetEnvironmentVariable("ApiKeyMeteo");
+
+            HttpClient client = new HttpClient();
+
+            double LAT = 51.507321900000;
+            double LON = -0.127647400000;
+
+            string url = $"https://www.meteosource.com/api/v1/free/point?lat={LAT}&lon={LON}&key={API}";
+            string UpdateUrl = url.Replace(",", ".");
+            var tempValue = await client.GetAsync(UpdateUrl);
+
+            var jsonString = tempValue.Content.ReadAsStringAsync().Result;
+
+            dynamic myObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
+            int temp = myObject.current.temperature;
+            string responseMessage = "Result";
+
+            return new OkObjectResult(responseMessage);
+        }
+        [FunctionName("OpenweatherAPI")]
+        public static async Task<IActionResult> OpenweatherAPI(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            var API = Environment.GetEnvironmentVariable("ApiKeyOpenweather");
+
+            HttpClient client = new HttpClient();
+            double LAT = 51.507321900000;
+            double LON = -0.127647400000;
+
+            var tempValue = await client.GetAsync($"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&appid={API}");
+
+            var jsonString = tempValue.Content.ReadAsStringAsync().Result;
+
+            dynamic myObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
+            int temp = myObject.main.temp;
+            string responseMessage = "Result";
+
+            return new OkObjectResult(responseMessage);
+        }
+        [FunctionName("BackgroundCounters")]
+        public static async Task<IActionResult> BackgroundCounters(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            KelvinToCelsius(282);
+            double[] doubArray = new double[] {12.5,14.7};
+            MiddleValue(doubArray);
+
+            string responseMessage = "Result";
+
+            return new OkObjectResult(responseMessage);
+        }
+
+        private static double KelvinToCelsius(int Kelvin)
+        {
+            double cel = Kelvin - 273.15;
+            double cel2 = Math.Round((cel) * 100) / 100;
+
+            Console.WriteLine(cel2);
+            return cel2;
+        }
+        private static double MiddleValue(double[] sourceNumbers)
+        {
+            if (sourceNumbers == null || sourceNumbers.Length == 0)
+                throw new System.Exception("Median of empty array not defined.");
+
+            //make sure the list is sorted, but use a new array
+            double[] sortedPNumbers = (double[])sourceNumbers.Clone();
+            Array.Sort(sortedPNumbers);
+
+            //get the median
+            int size = sortedPNumbers.Length;
+            int mid = size / 2;
+            double median = (size % 2 != 0) ? (double)sortedPNumbers[mid] : ((double)sortedPNumbers[mid] + (double)sortedPNumbers[mid - 1]) / 2;
+            Console.WriteLine(median);
+            return median;
+        }
