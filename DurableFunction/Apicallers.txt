@@ -1,4 +1,4 @@
-[FunctionName("MeteoSourceAPI")]
+        [FunctionName("MeteoSourceAPI")]
         public static async Task<IActionResult> MeteoSourceAPI(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
